@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Soundmatch</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app">
+      <h1>🎵 Soundmatch</h1>
+      <p class="subtitle">Spotify-Songs gemeinsam swipen und nur einstimmige Likes landen in der Playlist.</p>
+
+      <section class="card" id="lobbyCard">
+        <h2>Lobby erstellen</h2>
+        <div class="row">
+          <input id="lobbyName" type="text" placeholder="Lobby Name (z. B. Freitagabend)" />
+          <button id="createLobbyBtn">Lobby starten</button>
+        </div>
+        <p id="lobbyInfo" class="muted">Noch keine Lobby erstellt.</p>
+      </section>
+
+      <section class="card" id="playersCard">
+        <h2>Freunde</h2>
+        <div class="row">
+          <input id="playerName" type="text" placeholder="Spielername" />
+          <button id="addPlayerBtn">Hinzufügen</button>
+        </div>
+        <p id="playerInfo" class="muted"></p>
+        <ul id="playerList" class="list"></ul>
+      </section>
+
+      <section class="card" id="songSelectionCard">
+        <h2>Beliebte Songs auswählen</h2>
+        <p class="muted">Jeder Spieler wählt seine beliebten Songs aus dem Pool.</p>
+        <div id="songPool" class="song-pool"></div>
+      </section>
+
+      <section class="card" id="roundCard">
+        <h2>Runde</h2>
+        <div class="row">
+          <label for="roundSize">Songs pro Runde:</label>
+          <input id="roundSize" type="number" min="1" max="12" value="5" />
+          <button id="startRoundBtn">Runde starten</button>
+        </div>
+        <p id="roundInfo" class="muted">Noch keine aktive Runde.</p>
+      </section>
+
+      <section class="card hidden" id="swipeCard">
+        <h2>Swipe</h2>
+        <p id="turnInfo"></p>
+        <article id="songCard" class="song-card"></article>
+        <div class="swipe-actions">
+          <button id="dislikeBtn" class="danger">👎 Nein</button>
+          <button id="likeBtn" class="success">👍 Ja</button>
+        </div>
+      </section>
+
+      <section class="card" id="playlistCard">
+        <h2>Gemeinsame Playlist (alle haben geliked)</h2>
+        <ol id="playlist" class="list"></ol>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
