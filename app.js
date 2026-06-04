@@ -43,7 +43,7 @@ const dislikeBtn = document.getElementById("dislikeBtn");
 const playlistList = document.getElementById("playlist");
 
 function generateLobbyCode() {
-  return Math.random().toString(36).slice(2, 7).toUpperCase();
+  return Math.random().toString(36).slice(2, 7).toUpperCase().padEnd(5, "X");
 }
 
 function createLobby() {
@@ -128,14 +128,17 @@ function renderSongPool() {
   });
 }
 
-function collectRoundSongs(roundSize) {
+function collectSelectedSongs() {
   const selectedSongIds = new Set();
   Object.values(state.selectedByPlayer).forEach((songSet) => {
     songSet.forEach((id) => selectedSongIds.add(id));
   });
 
-  return songs
-    .filter((song) => selectedSongIds.has(song.id))
+  return songs.filter((song) => selectedSongIds.has(song.id));
+}
+
+function collectRoundSongs(roundSize) {
+  return collectSelectedSongs()
     .sort(() => Math.random() - 0.5)
     .slice(0, roundSize);
 }
@@ -151,7 +154,8 @@ function startRound() {
     return;
   }
 
-  const roundSize = Math.max(1, Math.min(Number(roundSizeInput.value) || 5, songs.length));
+  const availableSongs = collectSelectedSongs();
+  const roundSize = Math.max(1, Math.min(Number(roundSizeInput.value) || 5, availableSongs.length));
   const roundSongs = collectRoundSongs(roundSize);
 
   if (!roundSongs.length) {

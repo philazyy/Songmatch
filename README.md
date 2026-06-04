@@ -14,7 +14,7 @@ Eine einfache Webapp wie Tinder für Spotify-Songs:
 Da es eine statische App ist, reicht ein einfacher Webserver:
 
 ```bash
-cd /tmp/workspace/philazyy/Songmatch
+cd <project-directory>
 python3 -m http.server 4173
 ```
 
