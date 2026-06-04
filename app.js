@@ -268,7 +268,16 @@ function renderPlaylist() {
   playlistList.innerHTML = "";
   state.playlist.forEach((song) => {
     const li = document.createElement("li");
-    li.innerHTML = `${song.title} — ${song.artist} · <a href="https://open.spotify.com/track/${song.id}" target="_blank" rel="noopener noreferrer">öffnen</a>`;
+    const label = document.createElement("span");
+    label.textContent = `${song.title} — ${song.artist} · `;
+
+    const link = document.createElement("a");
+    link.href = `https://open.spotify.com/track/${song.id}`;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.textContent = "öffnen";
+
+    li.append(label, link);
     playlistList.appendChild(li);
   });
 }
