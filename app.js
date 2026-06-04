@@ -44,12 +44,12 @@ const playlistList = document.getElementById("playlist");
 
 function generateLobbyCode() {
   const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-  let code = "";
+  const chars = [];
   for (let index = 0; index < 5; index += 1) {
     const randomIndex = Math.floor(Math.random() * alphabet.length);
-    code += alphabet[randomIndex];
+    chars.push(alphabet[randomIndex]);
   }
-  return code;
+  return chars.join("");
 }
 
 function createLobby() {
@@ -145,9 +145,9 @@ function collectSelectedSongs() {
 
 function collectRoundSongs(roundSize) {
   const shuffledSongs = [...collectSelectedSongs()];
-  for (let index = shuffledSongs.length - 1; index > 0; index -= 1) {
-    const randomIndex = Math.floor(Math.random() * (index + 1));
-    [shuffledSongs[index], shuffledSongs[randomIndex]] = [shuffledSongs[randomIndex], shuffledSongs[index]];
+  for (let currentIndex = shuffledSongs.length - 1; currentIndex > 0; currentIndex -= 1) {
+    const randomIndex = Math.floor(Math.random() * (currentIndex + 1));
+    [shuffledSongs[currentIndex], shuffledSongs[randomIndex]] = [shuffledSongs[randomIndex], shuffledSongs[currentIndex]];
   }
   return shuffledSongs.slice(0, roundSize);
 }
