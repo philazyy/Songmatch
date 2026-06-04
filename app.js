@@ -1,3 +1,6 @@
+const LOBBY_CODE_LENGTH = 5;
+const LOBBY_CODE_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
 const songs = [
   { id: "3n3Ppam7vgaVa1iaRUc9Lp", title: "Mr. Brightside", artist: "The Killers" },
   { id: "7ouMYWpwJ422jRcDASZB7P", title: "Take on Me", artist: "a-ha" },
@@ -30,6 +33,7 @@ const createLobbyBtn = document.getElementById("createLobbyBtn");
 const lobbyInfo = document.getElementById("lobbyInfo");
 const playerNameInput = document.getElementById("playerName");
 const addPlayerBtn = document.getElementById("addPlayerBtn");
+const playerInfo = document.getElementById("playerInfo");
 const playerList = document.getElementById("playerList");
 const songPool = document.getElementById("songPool");
 const startRoundBtn = document.getElementById("startRoundBtn");
@@ -43,11 +47,10 @@ const dislikeBtn = document.getElementById("dislikeBtn");
 const playlistList = document.getElementById("playlist");
 
 function generateLobbyCode() {
-  const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   const chars = [];
-  for (let index = 0; index < 5; index += 1) {
-    const randomIndex = Math.floor(Math.random() * alphabet.length);
-    chars.push(alphabet[randomIndex]);
+  for (let index = 0; index < LOBBY_CODE_LENGTH; index += 1) {
+    const randomIndex = Math.floor(Math.random() * LOBBY_CODE_CHARACTERS.length);
+    chars.push(LOBBY_CODE_CHARACTERS[randomIndex]);
   }
   return chars.join("");
 }
@@ -66,13 +69,20 @@ function createLobby() {
 
 function addPlayer() {
   const name = playerNameInput.value.trim();
-  if (!name || state.players.includes(name)) {
+  if (!name) {
+    playerInfo.textContent = "Bitte einen Spielernamen eingeben.";
+    return;
+  }
+
+  if (state.players.includes(name)) {
+    playerInfo.textContent = `„${name}“ ist bereits in der Lobby.`;
     return;
   }
 
   state.players.push(name);
   state.selectedByPlayer[name] = new Set();
   playerNameInput.value = "";
+  playerInfo.textContent = `${name} wurde hinzugefügt.`;
   renderPlayers();
   renderSongPool();
 }
@@ -194,18 +204,29 @@ function renderCurrentSong() {
   }
 
   turnInfo.textContent = `${activePlayer} stimmt jetzt ab (${state.currentSongIndex + 1}/${state.roundSongs.length})`;
-  songCard.innerHTML = `
-    <h3>${song.title}</h3>
-    <p class="muted">${song.artist}</p>
-    <iframe
-      src="https://open.spotify.com/embed/track/${song.id}?utm_source=generator"
-      width="100%"
-      height="152"
-      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-      loading="lazy"
-    ></iframe>
-    <a href="https://open.spotify.com/track/${song.id}" target="_blank" rel="noopener noreferrer">Song in Spotify öffnen</a>
-  `;
+  songCard.innerHTML = "";
+
+  const title = document.createElement("h3");
+  title.textContent = song.title;
+
+  const artist = document.createElement("p");
+  artist.className = "muted";
+  artist.textContent = song.artist;
+
+  const iframe = document.createElement("iframe");
+  iframe.src = `https://open.spotify.com/embed/track/${song.id}?utm_source=generator`;
+  iframe.width = "100%";
+  iframe.height = "152";
+  iframe.setAttribute("allow", "autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture");
+  iframe.loading = "lazy";
+
+  const spotifyLink = document.createElement("a");
+  spotifyLink.href = `https://open.spotify.com/track/${song.id}`;
+  spotifyLink.target = "_blank";
+  spotifyLink.rel = "noopener noreferrer";
+  spotifyLink.textContent = "Song in Spotify öffnen";
+
+  songCard.append(title, artist, iframe, spotifyLink);
 }
 
 function voteCurrentSong(liked) {
