@@ -43,7 +43,13 @@ const dislikeBtn = document.getElementById("dislikeBtn");
 const playlistList = document.getElementById("playlist");
 
 function generateLobbyCode() {
-  return Math.random().toString(36).slice(2, 7).toUpperCase().padEnd(5, "X");
+  const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let code = "";
+  for (let index = 0; index < 5; index += 1) {
+    const randomIndex = Math.floor(Math.random() * alphabet.length);
+    code += alphabet[randomIndex];
+  }
+  return code;
 }
 
 function createLobby() {
@@ -138,9 +144,12 @@ function collectSelectedSongs() {
 }
 
 function collectRoundSongs(roundSize) {
-  return collectSelectedSongs()
-    .sort(() => Math.random() - 0.5)
-    .slice(0, roundSize);
+  const shuffledSongs = [...collectSelectedSongs()];
+  for (let index = shuffledSongs.length - 1; index > 0; index -= 1) {
+    const randomIndex = Math.floor(Math.random() * (index + 1));
+    [shuffledSongs[index], shuffledSongs[randomIndex]] = [shuffledSongs[randomIndex], shuffledSongs[index]];
+  }
+  return shuffledSongs.slice(0, roundSize);
 }
 
 function startRound() {
@@ -155,7 +164,9 @@ function startRound() {
   }
 
   const availableSongs = collectSelectedSongs();
-  const roundSize = Math.max(1, Math.min(Number(roundSizeInput.value) || 5, availableSongs.length));
+  const requestedRoundSize = Number(roundSizeInput.value) || 5;
+  const clampedRoundSize = Math.min(requestedRoundSize, availableSongs.length);
+  const roundSize = Math.max(1, clampedRoundSize);
   const roundSongs = collectRoundSongs(roundSize);
 
   if (!roundSongs.length) {
